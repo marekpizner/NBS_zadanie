@@ -1,6 +1,6 @@
 import requests
 import json
-import dateutil.parser as p
+from collections import defaultdict
 
 uctovne_jednotky_url = 'http://www.registeruz.sk/cruz-public/api/uctovne-jednotky'
 uctovna_jednotka_url = 'http://www.registeruz.sk/cruz-public/api/uctovna-jednotka'
@@ -20,12 +20,11 @@ def rest_request(url, params):
 
 
 def uloha1():
-    parm = {'ico': input("Enter ICO:")}
-    parm = {'zmenene-od': '2000-01-01'}
+    parm = {'zmenene-od': '2000-01-01','ico': input("Enter ICO:")}
 
     data = rest_request(uctovne_jednotky_url, parm)
 
-    output_str = []
+    output_str = defaultdict(list)
     output = False
 
     for key in data['id']:
@@ -38,13 +37,18 @@ def uloha1():
                 parm3 = {'id': str(key2)}
                 data3 = rest_request(uctovna_zavierka_url, parm3)
                 # print(data3['datumZostaveniaK'], len(data3['idUctovnychVykazov']))
-                output_str.append([data3['datumZostaveniaK'], len(data3['idUctovnychVykazov'])])
+                if data3['datumZostaveniaK'] in output_str:
+                    output_str[data3['datumZostaveniaK']] += (len(data3['idUctovnychVykazov']))
+                else:
+                    output_str[data3['datumZostaveniaK']] = (len(data3['idUctovnychVykazov']))
                 output = True
+
 
     if output == False:
         print("prazdny vystup")
     else:
-        sorted(output_str, key=lambda d: p.parse(d[0]))
+       # sorted(output_str, key=lambda d: tuple(map(int, d[0].split('-'))))
+        output_str.sort(key=lambda r: r[0])
         for out in output_str:
             print(str(out[0]) + "\t" + str(out[1]))
 
