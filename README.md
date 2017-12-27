@@ -1,7 +1,7 @@
-#Zadanie NBS<br />
+# Zadanie NBS<br />
 Program je pisany v programovacom jazyku python 3.6.
 Program cita premenne porstredia a na zaklade nich sa rozhodne aku ulohu spusti.<br />
-###Priklad<br />
+### Priklad<br />
 **Spustenie ulohy1:<br />**
 ``
 $ ULOHA="1" python3.6 Main.py
